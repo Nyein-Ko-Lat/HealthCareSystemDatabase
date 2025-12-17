@@ -307,7 +307,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_doctor_by_id` (IN `d_DoctorI
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_doctor_by_Speciality` (IN `p_Speciality` NVARCHAR(50))   BEGIN
-    SELECT * FROM gh1043541_healthcare_db.v_doctors where `Specialty` = p_Speciality;
+    SELECT * FROM gh1043541_healthcare_db.v_doctors
+         where `Specialty` = p_Speciality AND Status <> 'DEL';
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_get_doctor_schedule_by_doctor_id` (IN `p_DoctorID` BIGINT)   BEGIN
@@ -356,11 +357,15 @@ LIMIT topLimit;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_list_appointments` ()   BEGIN
-    SELECT * FROM v_appointments ORDER BY "Appointment Date";
+    SELECT * FROM v_appointments
+     WHERE Status <> 'DEL'
+     ORDER BY "Appointment Date";
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_list_doctors` ()   BEGIN
-    SELECT * FROM v_doctors;
+    SELECT * FROM v_doctors
+     WHERE Status <> 'DEL'
+     ORDER BY Specialty;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_list_doctor_schedules` ()   BEGIN
@@ -370,7 +375,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_list_doctor_schedules` ()   BEGI
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_list_family_history` ()   BEGIN
-    SELECT * FROM v_family_history ORDER BY "Relationship";
+    SELECT * FROM v_family_history
+     WHERE Status <> 'DEL'
+     ORDER BY "Relationship";
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_list_family_history_by_patientId` (IN `p_PatientID` BIGINT)   BEGIN
@@ -378,15 +385,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_list_family_history_by_patientId
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_list_patients` ()   BEGIN
-    SELECT * FROM v_patients ORDER BY "Last Name", "First Name";
+    SELECT * FROM v_patients
+     WHERE Status <> 'DEL'
+     ORDER BY "Last Name", "First Name";
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_list_patient_conditions` ()   BEGIN
-    SELECT * FROM v_patient_conditions ORDER BY "Diagnosed Date" DESC;
+    SELECT * FROM v_patient_conditions
+     WHERE Status <> 'DEL'
+     ORDER BY "Diagnosed Date" DESC;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_list_patient_visits` ()   BEGIN
-    SELECT * FROM v_patient_visits ORDER BY "Visit Date" DESC;
+    SELECT * FROM v_patient_visits
+     WHERE Status <> 'DEL'
+     ORDER BY "Visit Date" DESC;
 END$$
 
 
@@ -412,6 +425,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_appointment` (IN `p_Appoint
             StatusCode = p_StatusCode,
             UpdatedBy = p_UpdatedBy
         WHERE AppointmentID = p_AppointmentID;
+        SELECT p_AppointmentID AS AppointmentID;
     END IF;
 END$$
 
@@ -439,6 +453,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_doctor` (IN `p_DoctorID` BI
             StatusCode = p_StatusCode,
             UpdatedBy = p_UpdatedBy
         WHERE DoctorID = p_DoctorID;
+
+        SELECT p_DoctorID AS DoctorID;
     END IF;
 END$$
 
@@ -483,6 +499,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_doctor_schedule` (IN `p_Doc
             StatusCode = p_StatusCode,
             UpdatedBy = p_UpdatedBy
         WHERE DoctorScheduleID = p_DoctorScheduleID;
+        SELECT p_DoctorScheduleID AS DoctorScheduleID;
     END IF;
 END$$
 
@@ -515,10 +532,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_family_history` (IN `p_Fami
             StatusCode       = p_StatusCode,
             UpdatedBy        = p_UpdatedBy
         WHERE FamilyHistoryID = p_FamilyHistoryID;
+        SELECT p_FamilyHistoryID AS FamilyHistoryID;
     END IF;
 
 END$$
 
+DROP PROCEDURE if exists sp_save_patient;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_patient` (IN `p_PatientID` BIGINT, IN `p_FirstName` VARCHAR(50), IN `p_LastName` VARCHAR(50), IN `p_DateOfBirth` DATE, IN `p_Gender` VARCHAR(10), IN `p_BloodType` VARCHAR(5), IN `p_StatusCode` VARCHAR(3), IN `p_CreatedBy` BIGINT, IN `p_UpdatedBy` BIGINT)   BEGIN
     IF p_PatientID IS NULL OR p_PatientID = 0 THEN
         INSERT INTO patients (
@@ -542,7 +561,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_patient` (IN `p_PatientID` 
             StatusCode = p_StatusCode,
             UpdatedBy = p_UpdatedBy
         WHERE PatientID = p_PatientID;
-        SELECT LAST_INSERT_ID() AS PatientID;
+        SELECT p_PatientID AS PatientID;
     END IF;
 END$$
 
@@ -580,6 +599,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_patient_condition` (IN `p_C
             StatusCode = p_StatusCode,
             UpdatedBy = p_UpdatedBy
         WHERE ConditionID = p_ConditionID;
+        SELECT p_ConditionID AS ConditionID;
     END IF;
 
     IF p_VisitID IS NOT NULL AND p_VisitID > 0 THEN
@@ -624,6 +644,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_save_patient_visit` (IN `p_Visit
             StatusCode = p_StatusCode,
             UpdatedBy = p_UpdatedBy
         WHERE VisitID = p_VisitID;
+        SELECT p_VisitID AS VisitID;
     END IF;
 
     IF p_AppointmentID IS NOT NULL AND p_AppointmentID > 0 THEN

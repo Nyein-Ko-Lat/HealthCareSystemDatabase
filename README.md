@@ -115,7 +115,11 @@ To support data management and analytics, the database includes the following ad
 
 Update Queries – For modifying existing records.
 
+(https://github.com/Nyein-Ko-Lat/HealthCareSystemDatabase/blob/main/Update%20Queries.sql)
+
 Delete Queries – As java project does logical deletion of records using the StatusCode flag instead of physical deletion. However this queries does acutal delete
+
+(https://github.com/Nyein-Ko-Lat/HealthCareSystemDatabase/blob/main/DELETE%20Queries.sql)
 
 Analytical Queries – Queries designed to extract insights from the database, including:
 
@@ -125,5 +129,7 @@ Analytical Queries – Queries designed to extract insights from the database, i
 4. Dr with their appointment counts
 5. Patient that make appointment and not visit
 6. Most common reason that come to each doctor
+
+(https://github.com/Nyein-Ko-Lat/HealthCareSystemDatabase/blob/main/Additional%20Analysis%20Queries.sql)
 
 These queries demonstrate the database’s capabilities for reporting, monitoring, and operational analysis, without requiring frontend integration.

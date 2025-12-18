@@ -108,3 +108,22 @@ _Prevents duplicate record conflicts_
 Appointments, Patient visits, Consultation / diagnosis records
 
 ⚠️ **_Depends on data created in the previous script_**
+
+### Additional Queries
+
+To support data management and analytics, the database includes the following additional queries that can be run independently of the Java backend:
+
+Update Queries – For modifying existing records.
+
+Delete Queries – As java project does logical deletion of records using the StatusCode flag instead of physical deletion. However this queries does acutal delete
+
+Analytical Queries – Queries designed to extract insights from the database, including:
+
+1. Patient make appointment however not visit without cancel.
+2. Top patient coming to clinic by their condition
+3. Top patient coming to clinic by dr's specialty
+4. Dr with their appointment counts
+5. Patient that make appointment and not visit
+6. Most common reason that come to each doctor
+
+These queries demonstrate the database’s capabilities for reporting, monitoring, and operational analysis, without requiring frontend integration.

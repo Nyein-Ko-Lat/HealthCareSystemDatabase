@@ -1,4 +1,4 @@
-## Health Care Appointment & Patient Visit Management System
+## Health Care Appointment & Patient Visit Management System Database
 ### Overview
 This repository contains the relational database design and implementation for the HealthCare Management System.
 The database supports patient registration, doctor scheduling, appointment booking, clinical visits, and diagnosis recording.
